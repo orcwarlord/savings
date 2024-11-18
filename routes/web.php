@@ -1,15 +1,29 @@
 <?php
 
 use App\Models\Savings;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrganisationController;
 
 Route::get('/', function () {
-
     $totalSavings = Savings::sum('amount');
-    return view('welcome', compact('totalSavings'));
+
+    // get each savings with oraganisation name
+    $savingsWithOrganisation = Savings::select('savings.*', 'organisations.name as organisation_name')
+        ->join('organisations', 'savings.organisation_id', '=', 'organisations.id')
+        ->get();
+    // $savingsWithEndDate = Savings::select('savings.*')
+    //     ->get();
+
+    $savingsByUser = Savings::select('saver', DB::raw('sum(amount) as total'))
+        ->groupBy('saver')
+        ->get();
+
+    // dd($savingsWithOrganisation);
+
+    return view('welcome', compact('totalSavings', 'savingsByUser', 'savingsWithOrganisation'));
 });
 
 Route::get('/dashboard', function () {
@@ -25,7 +39,5 @@ Route::middleware('auth')->group(function () {
 Route::resource('user', UserController::class);
 
 Route::resource('organisation', OrganisationController::class);
-
-
 
 require __DIR__.'/auth.php';
