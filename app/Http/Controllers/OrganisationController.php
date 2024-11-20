@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Organisation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrganisationController extends Controller
 {
@@ -13,7 +14,7 @@ class OrganisationController extends Controller
     public function index()
     {
         $organisations = Organisation::all();
-        return view('organisations.index', compact('organisations'));
+        return view('organisation.index', compact('organisations'));
     }
 
     /**
@@ -21,7 +22,8 @@ class OrganisationController extends Controller
      */
     public function create()
     {
-        //
+        // Open organisation.create view
+        return view('organisation.create');
     }
 
     /**
@@ -29,15 +31,33 @@ class OrganisationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'url' => 'required|url',
+            'description' => 'nullable|string',
+        ]);
+
+        Organisation::create($validated);
+
+        return redirect()->route('organisation.index')->with('success', 'Organisation created successfully');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Organisation $organisation)
+    public function show($id)
     {
-        //
+        // Fetch the organisation by ID
+        $organisation = Organisation::findOrFail($id);
+
+        // Check if the request expects a JSON response
+        if (request()->wantsJson()) {
+            return response()->json($organisation);
+        }
+
+        // If not JSON, return a view for standard HTML rendering
+        return view('organisation.show', compact('organisation'));
+
     }
 
     /**
@@ -51,16 +71,57 @@ class OrganisationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Organisation $organisation)
+    public function update(Request $request, $id)
     {
-        //
+
+        // Validate the incoming request data
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'url' => 'required|url',
+            'description' => 'nullable|string',
+        ]);
+
+        // Find the organisation or fail
+        $organisation = Organisation::findOrFail($id);
+
+        // Update the organisation with validated data
+        $organisation->update($validated);
+
+        // return to organisation.index view
+        return redirect()->route('organisation.index')->with('success', 'Organisation updated successfully');
+
+        // // Return a JSON response with the updated data
+        // return response()->json([
+        //     'success' => true,
+        //     'organisation' => $organisation,
+        // ]);
+
     }
+
+    // public function update(Request $request, $id)
+    // {
+    //     // update the organisation
+    //     $organisation = Organisation::findOrFail($id);
+    //     $organisation->update($request->all());
+
+    //     // return a JSON response
+    //     return response()->json([
+    //         'success' => true,
+    //         'organisation' => $organisation,
+    //     ]);
+
+    // }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Organisation $organisation)
     {
-        //
+        // Destroy the organisation
+        $organisation->delete();
+
+        return redirect()->route('organisation.index')->with('success', 'Organisation deleted successfully');
+
     }
 }

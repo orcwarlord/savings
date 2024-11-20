@@ -13,8 +13,8 @@
                 </div> --}}
                 <div class="grid grid-cols-1 md:grid-cols-2">
                     <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                        <h2>Savings</h2>
-                        <p>Current Savings: ${{ number_format($savings, 2) }}</p>
+                        <h2>Current Total:</h2>
+                        <p>£{{ number_format($totalSavings, 2) }}</p>
                     </div>
                 </div>
             </div>

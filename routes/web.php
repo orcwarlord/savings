@@ -1,33 +1,52 @@
 <?php
 
 use App\Models\Savings;
+use App\Models\Organisation;
+use App\Services\SavingsService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrganisationController;
 
-Route::get('/', function () {
-    $totalSavings = Savings::sum('amount');
+// Route::get('/', function () {
+//     $totalSavings = Savings::sum('amount');
 
-    // get each savings with oraganisation name
-    $savingsWithOrganisation = Savings::select('savings.*', 'organisations.name as organisation_name')
-        ->join('organisations', 'savings.organisation_id', '=', 'organisations.id')
-        ->get();
-    // $savingsWithEndDate = Savings::select('savings.*')
-    //     ->get();
+//     // get each savings with oraganisation name
+//     $savingsWithOrganisation = Savings::select('savings.*', 'organisations.name as organisation_name')
+//         ->join('organisations', 'savings.organisation_id', '=', 'organisations.id')
+//         ->get();
+//     // $savingsWithEndDate = Savings::select('savings.*')
+//     //     ->get();
 
-    $savingsByUser = Savings::select('saver', DB::raw('sum(amount) as total'))
-        ->groupBy('saver')
-        ->get();
+//     $savingsByUser = Savings::select('saver', DB::raw('sum(amount) as total'))
+//         ->groupBy('saver')
+//         ->get();
 
-    // dd($savingsWithOrganisation);
+//     // dd($savingsWithOrganisation);
 
-    return view('welcome', compact('totalSavings', 'savingsByUser', 'savingsWithOrganisation'));
+//     return view('welcome', compact('totalSavings', 'savingsByUser', 'savingsWithOrganisation'));
+// });
+
+Route::get('/organisation/{id}', function ($id) {
+    $organisation = Organisation::findOrFail($id);
+    return response()->json($organisation);
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+
+
+Route::get('/', function (SavingsService $savingsService) {
+    $totalSavings = $savingsService->getTotalSavings();
+    $savingsWithOrganisation = $savingsService->getSavingsWithOrganisation();
+    $savingsByUser = $savingsService->getSavingsByUser();
+
+    return view('welcome', compact('totalSavings', 'savingsWithOrganisation', 'savingsByUser'));
+});
+
+Route::get('/dashboard', function (SavingsService $savingsService) {
+    $totalSavings = $savingsService->getTotalSavings();
+
+    return view('dashboard', compact('totalSavings'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -39,5 +58,6 @@ Route::middleware('auth')->group(function () {
 Route::resource('user', UserController::class);
 
 Route::resource('organisation', OrganisationController::class);
+
 
 require __DIR__.'/auth.php';
