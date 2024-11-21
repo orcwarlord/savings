@@ -16,6 +16,15 @@
                         <h2>Current Total:</h2>
                         <p>£{{ number_format($totalSavings, 2) }}</p>
                     </div>
+                    <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="mb-2">Admin:</h2>
+                        {{-- link to organisation.index styled as a button--}}
+
+                        <a href="{{ route('organisation.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-6">Organisation</a>
+                        <a href="{{ route('type.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-6">Type</a>
+
+
+                    </div>
                 </div>
             </div>
         </div>

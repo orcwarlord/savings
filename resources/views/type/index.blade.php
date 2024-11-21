@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Organisations') }}
+            {{ __('Types of Savings') }}
         </h2>
     </x-slot>
 
@@ -14,14 +14,13 @@
                 </div>
             @endif
 
-            {{-- Display success message --}}
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <button
                         class="text-green-600 hover:text-green-900 text-2xl p-4"
                         onclick="openNewModal()"
                     >
-                        <i class="fa-solid fa-plus"></i> New Organisation
+                        <i class="fa-solid fa-plus"></i> New type
                     </button>
                 <div class="grid grid-cols-1 "> {{-- Add if needed - lg:grid-cols-2 --}}
 
@@ -30,38 +29,28 @@
                             <thead>
                                 <tr class="border-b">
                                     <th class="px-4 py-2 font-semibold text-black dark:text-white">Name</th>
-                                    <th class="px-4 py-2 font-semibold text-black dark:text-white">URL</th>
-                                    <th class="px-4 py-2 font-semibold text-black dark:text-white"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($organisations as $organisation)
+                                @foreach ($types as $type)
                                     <tr class="border-b hover:bg-gray-100 dark:hover:bg-gray-800">
-                                        <td class="px-4 py-2">{{ $organisation->name }}</td>
-                                        {{-- If small or medium display "Link" else display URL --}}
+                                        <td class="px-4 py-2">{{ $type->name }}</td>
                                         <td class="px-4 py-2">
-                                            <a href="{{ Str::startsWith($organisation->url, ['http://', 'https://']) ? $organisation->url : 'https://' . $organisation->url }}" target="_blank">
-                                            {{-- Use responsive classes to conditionally display text --}}
-                                                <span class="sm:hidden">Link</span>
-                                                <span class="hidden sm:inline">{{ $organisation->url }}</span>
-                                            </a>
-                                        </td>
-                                        <td class="px-4 py-2">
-                                            {{-- <a href="{{ route('organisation.show', $organisation->id) }}" class="text-blue-600 hover:text-blue-900" target="_blank">View</a> --}}
-                                            <button class="text-blue-600 hover:text-blue-900 mr-4" onclick="openModal({{ $organisation->id }})">
+                                            {{-- <a href="{{ route('type.show', $type->id) }}" class="text-blue-600 hover:text-blue-900" target="_blank">View</a> --}}
+                                            <button class="text-blue-600 hover:text-blue-900 mr-4" onclick="openModal({{ $type->id }})">
                                                 <i class="fa-solid fa-eye"></i>
                                             </button>
                                             <button
                                                 class="text-green-600 hover:text-green-900 mr-4"
-                                                onclick="openEditModal({{ $organisation->id }})"
+                                                onclick="openEditModal({{ $type->id }})"
                                             >
                                                 <i class="fa-solid fa-pen"></i>
                                             </button>
                                             <form
-                                                action="{{ route('organisation.destroy', $organisation->id) }}"
+                                                action="{{ route('type.destroy', $type->id) }}"
                                                 method="POST"
                                                 class="inline"
-                                                onsubmit="return confirm('Are you sure you want to delete this organisation?');"
+                                                onsubmit="return confirm('Are you sure you want to delete this type?');"
                                             >
                                                 @csrf
                                                 @method('DELETE')
@@ -84,10 +73,10 @@
         </div>
     </div>
 
-    {{-- End of organisation list table --}}
+    {{-- End of type list table --}}
 
     {{-- Modal for org show data --}}
-    <div id="organisationModal" class="fixed inset-0 z-50 hidden items-center justify-center ">
+    <div id="typeModal" class="fixed inset-0 z-50 hidden items-center justify-center ">
         {{-- Modal background --}}
         <div class="absolute inset-0 bg-black bg-opacity-25 w-full h-full m-0" onclick="closeModal()"></div>
         {{-- Modal content --}}
@@ -98,16 +87,13 @@
             >
                 &times;
             </button>
-            <h2 class="text-xl font-bold mb-4" id="organisationName">Organisation Details</h2>
-            <div id="organisationDetails" class="text-gray-700">
-                <!-- Organisation details will be dynamically injected here -->
-                Loading...
-            </div>
+            <h2 class="text-xl font-bold mb-4" id="typeName">Type</h2>
+
         </div>
     </div>
 
     {{-- Modal for org create --}}
-    <div id="newOrganisationModal" class="fixed inset-0 z-50 hidden items-center justify-center">
+    <div id="newTypeModal" class="fixed inset-0 z-50 hidden items-center justify-center">
         <!-- Modal background -->
         <div class="absolute inset-0 bg-black bg-opacity-25 w-full h-full" onclick="closeNewModal()"></div>
 
@@ -118,51 +104,29 @@
                 &times;
             </button>
 
-            <h2 class="text-xl font-bold mb-4">Create an Organisation</h2>
-            <form id="newOrganisationForm"
+            <h2 class="text-xl font-bold mb-4">Create an type</h2>
+            <form id="newtypeForm"
                 method="POST"
-                action="{{ route('organisation.store') }}"
+                action="{{ route('type.store') }}"
                 {{-- onsubmit="submitForm(event)" --}}
                 >
                 @csrf
                 {{-- @method('PUT') --}}
 
-                <!-- Hidden input for organisation ID -->
-                <input type="hidden" name="id" id="OrganisationId">
+                <!-- Hidden input for type ID -->
+                <input type="hidden" name="id" id="typeId">
                 {{-- <input type="hidden" name="_method" value="PUT"> --}}
 
                 <!-- Name Field -->
                 <div class="mb-4">
-                    <label for="OrganisationName" class="block text-gray-700">Name</label>
+                    <label for="typeName" class="block text-gray-700">Name</label>
                     <input
                         type="text"
-                        id="OrganisationName"
+                        id="typeName"
                         name="name"
                         class="w-full border rounded p-2"
                         required
                     />
-                </div>
-
-                <!-- URL Field -->
-                <div class="mb-4">
-                    <label for="OrganisationUrl" class="block text-gray-700">URL</label>
-                    <input
-                        type="url"
-                        id="OrganisationUrl"
-                        name="url"
-                        class="w-full border rounded p-2"
-                    />
-                </div>
-
-                <!-- Description Field -->
-                <div class="mb-4">
-                    <label for="OrganisationDescription" class="block text-gray-700">Description</label>
-                    <textarea
-                        id="OrganisationDescription"
-                        name="description"
-                        class="w-full border rounded p-2"
-                        rows="4"
-                    ></textarea>
                 </div>
 
                 <!-- Submit Button -->
@@ -179,7 +143,7 @@
     </div>
 
     {{-- Modal for org edit --}}
-    <div id="editOrganisationModal" class="fixed inset-0 z-50 hidden items-center justify-center">
+    <div id="editTypeModal" class="fixed inset-0 z-50 hidden items-center justify-center">
         <!-- Modal background -->
         <div
             class="absolute inset-0 bg-black bg-opacity-25 w-full h-full"
@@ -191,55 +155,30 @@
             <button class="absolute top-2 right-2 text-black hover:text-black text-3xl" onclick="closeEditModal()">
                 &times;
             </button>
-            <h2 class="text-xl font-bold mb-4">Edit Organisation</h2>
-            <form id="editOrganisationForm"
+            <h2 class="text-xl font-bold mb-4">Edit type</h2>
+            <form id="editTypeForm"
                 method="POST"
-                action="{{ route('organisation.update', $organisation->id) }}"
-                {{-- onsubmit="submitForm(event)" --}}
+                action="{{ route('type.update', $type->id) }}"
                 >
 
                 @csrf
                 @method('PUT')
 
-                <!-- Hidden input for organisation ID -->
-                <input name="id" type="hidden" id="editOrganisationId">
+                <!-- Hidden input for type ID -->
+                <input name="id" type="hidden" id="editTypeId">
 
                 <input type="hidden" name="_method" value="PUT">
 
                 <!-- Name Field -->
                 <div class="mb-4">
-                    <label for="editOrganisationName" class="block text-gray-700">Name</label>
+                    <label for="editTypeName" class="block text-gray-700">Name</label>
                     <input
                         type="text"
-                        id="editOrganisationName"
+                        id="editTypeName"
                         name="name"
                         class="w-full border rounded p-2"
                         required
                     />
-                </div>
-
-                <!-- URL Field -->
-                <div class="mb-4">
-                    <label for="editOrganisationUrl" class="block text-gray-700">URL</label>
-                    <input
-                        type="url"
-                        id="editOrganisationUrl"
-                        name="url"
-                        class="w-full border rounded p-2"
-                        required
-                    />
-                </div>
-
-                <!-- Description Field -->
-                <div class="mb-4">
-                    <label for="editOrganisationDescription" class="block text-gray-700">Description</label>
-                    <textarea
-                        id="editOrganisationDescription"
-                        name="description"
-                        class="w-full border rounded p-2"
-                        rows="4"
-                        required
-                    ></textarea>
                 </div>
 
                 <!-- Submit Button -->
@@ -255,7 +194,7 @@
 {{-- button to go to dashboard   --}}
 
 
-    {{-- <script src="{{ asset('js/organisation.js') }}"></script> --}}
-    @vite('resources/js/organisation.js')
+    {{-- <script src="{{ asset('js/type.js') }}"></script> --}}
+    @vite('resources/js/type.js')
 
 </x-app-layout>

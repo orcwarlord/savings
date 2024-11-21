@@ -13,7 +13,8 @@ class OrganisationController extends Controller
      */
     public function index()
     {
-        $organisations = Organisation::all();
+        $organisations = Organisation::all()->sortBy('name');
+
         return view('organisation.index', compact('organisations'));
     }
 
@@ -90,28 +91,7 @@ class OrganisationController extends Controller
         // return to organisation.index view
         return redirect()->route('organisation.index')->with('success', 'Organisation updated successfully');
 
-        // // Return a JSON response with the updated data
-        // return response()->json([
-        //     'success' => true,
-        //     'organisation' => $organisation,
-        // ]);
-
     }
-
-    // public function update(Request $request, $id)
-    // {
-    //     // update the organisation
-    //     $organisation = Organisation::findOrFail($id);
-    //     $organisation->update($request->all());
-
-    //     // return a JSON response
-    //     return response()->json([
-    //         'success' => true,
-    //         'organisation' => $organisation,
-    //     ]);
-
-    // }
-
 
     /**
      * Remove the specified resource from storage.

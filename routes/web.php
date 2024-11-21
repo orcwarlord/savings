@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\Type;
 use App\Models\Savings;
 use App\Models\Organisation;
 use App\Services\SavingsService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrganisationController;
@@ -32,7 +34,10 @@ Route::get('/organisation/{id}', function ($id) {
     $organisation = Organisation::findOrFail($id);
     return response()->json($organisation);
 });
-
+Route::get('/type/{id}', function ($id) {
+    $type = Type::findOrFail($id);
+    return response()->json($type);
+});
 
 
 Route::get('/', function (SavingsService $savingsService) {
@@ -55,9 +60,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Add middleware('auth') to protect the route
+
+
+
+
 Route::resource('user', UserController::class);
 
-Route::resource('organisation', OrganisationController::class);
+Route::resource('organisation', OrganisationController::class)->middleware('auth');
+
+Route::resource('type', TypeController::class)->middleware('auth');
 
 
 require __DIR__.'/auth.php';
