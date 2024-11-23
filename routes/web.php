@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SavingsController;
 use App\Http\Controllers\OrganisationController;
 
 // Route::get('/', function () {
@@ -34,9 +35,15 @@ Route::get('/organisation/{id}', function ($id) {
     $organisation = Organisation::findOrFail($id);
     return response()->json($organisation);
 });
+
 Route::get('/type/{id}', function ($id) {
     $type = Type::findOrFail($id);
     return response()->json($type);
+});
+
+Route::get('/savings/{id}', function ($id) {
+    $savings = Savings::findOrFail($id);
+    return response()->json($savings);
 });
 
 
@@ -67,9 +74,11 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('user', UserController::class);
 
-Route::resource('organisation', OrganisationController::class)->middleware('auth');
+Route::resource('organisation', OrganisationController::class)->middleware('auth', 'verified');
 
-Route::resource('type', TypeController::class)->middleware('auth');
+Route::resource('type', TypeController::class)->middleware('auth', 'verified');
+
+Route::resource('savings', SavingsController::class)->middleware('auth', 'verified');
 
 
 require __DIR__.'/auth.php';

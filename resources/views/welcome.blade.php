@@ -80,7 +80,7 @@
 
                             <div class="p-6 bg-white rounded-lg shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] dark:bg-zinc-900 dark:ring-zinc-800 ">
                                 {{-- Foreach user with savings display value in savingsByUser --}}
-                                <h2 class="text-xl font-semibold text-black dark:text-white">Savings by User</h2>
+                                <h2 class="text-xl font-semibold text-black dark:text-white">Savings by Saver</h2>
                                 <div class="grid grid-cols-1 md:grid-cols-2">
                                     @foreach ($savingsByUser as $user)
                                         <p><span class="mr-3">{{ $user->saver }}:</span> £{{ number_format($user->total, 2) }}</p>

@@ -18,11 +18,12 @@
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <button
-                        class="text-green-600 hover:text-green-900 text-2xl p-4"
-                        onclick="openNewModal()"
-                    >
-                        <i class="fa-solid fa-plus"></i> New Organisation
-                    </button>
+                    class="text-green-600 hover:text-green-900 text-2xl p-4"
+                    onclick="openNewModal()"
+                >
+                    <i class="fa-solid fa-plus"></i> New Organisation
+                </button>
+
                 <div class="grid grid-cols-1 "> {{-- Add if needed - lg:grid-cols-2 --}}
 
                     <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
