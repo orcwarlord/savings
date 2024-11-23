@@ -138,7 +138,7 @@
                 </div>
 
                 {{-- Fixed term checkbox - default = no--}}
-                <div class="mb-4">
+                <div class="mb-4" >
                     <label for="SavingsIsFixed" class="block text-gray-700">Fixed term account?</label>
                     <input type="hidden" name="is_fixed" value="0">
                     <input
@@ -148,11 +148,12 @@
                         class="border rounded p-2"
                         unchecked
                         value="1"
+                        onchange="toggleEndDateField()"
                     />
                 </div>
 
                 <!-- End Date Field -->
-                <div class="mb-4">
+                <div class="mb-4 hidden" id="endDateField">
                     <label for="SavingsEndDate" class="block text-gray-700">End Date</label>
                     <input
                         type="date"
@@ -164,7 +165,7 @@
                 </div>
 
                 <!-- Organisation Field -->
-                <div class="mb-4">
+                <div class="mb-4" >
                     <label for="SavingsOrganisation" class="block text-gray-700">Organisation</label>
                     <select
                         id="SavingsOrganisation"
@@ -252,17 +253,6 @@
                     </select>
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
                 <!-- Submit Button -->
                 <div class="text-right">
                     <button
@@ -295,6 +285,26 @@
             document.getElementById('SavingsEndDate').value = '';
 
         };
+
+
+        // Ensure the end date field is displayed based on initial checkbox state
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleEndDateField();
+    });
+
+    function toggleEndDateField() {
+        const checkbox = document.getElementById('SavingsIsFixed');
+        const endDateField = document.getElementById('endDateField');
+
+        // Toggle visibility using Tailwind classes
+        if (checkbox.checked) {
+            endDateField.classList.remove('hidden');  // Show the End Date field
+        } else {
+            endDateField.classList.add('hidden');     // Hide the End Date field
+            document.getElementById('SavingsEndDate').value = ''; // Reset the value
+        }
+    }
+
     </script>
 
 

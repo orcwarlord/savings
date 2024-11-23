@@ -81,6 +81,11 @@ class SavingsController extends Controller
             'type_id' => 'required|exists:types,id',
         ]);
 
+        // Set `end_date` to null if `is_fixed` is false
+        if (!$request->is_fixed) {
+            $validatedData['end_date'] = null;
+        }
+
         // try {
         //     $validated = $request->validate([
         //         'name' => 'required|string|max:255',
