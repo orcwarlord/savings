@@ -88,7 +88,7 @@
     {{-- End of organisation list table --}}
 
     {{-- Modal for org show data --}}
-    <div id="organisationModal" class="fixed inset-0 z-50 hidden items-center justify-center ">
+    <div id="organisationModal" class="fixed inset-0 z-50 hidden items-center justify-center h-full">
         {{-- Modal background --}}
         <div class="absolute inset-0 bg-black bg-opacity-25 w-full h-full m-0" onclick="closeModal()"></div>
         {{-- Modal content --}}

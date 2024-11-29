@@ -22,6 +22,7 @@
 
                         <a href="{{ route('organisation.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-6">Organisation</a>
                         <a href="{{ route('type.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-6">Type</a>
+                        <a href="{{ route('savings.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-6">Savings</a>
 
 
                     </div>
