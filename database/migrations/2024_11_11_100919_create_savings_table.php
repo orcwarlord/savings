@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('savings', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->decimal('amount', 8, 2);
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();

@@ -414,8 +414,8 @@
 
             const form = document.getElementById("savingForm");
             // Set up modal for "New Saving"
-            document.getElementById("newSavingModal").classList.remove("hidden");
-            document.getElementById("newSavingModal").classList.add("flex");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
 
             // modalTitle = "New Saving";
             form.action = "{{ route('savings.store') }}";
@@ -437,7 +437,7 @@
             }
 
 
-            modal.classList.remove("hidden");
+            // modal.classList.remove("hidden");
         }
 
 
@@ -476,7 +476,7 @@
             form.insertBefore(idInput, form.firstChild);
 
             // Populate fields with saving data
-            document.getElementById("SavingsId").value = saving.id;
+            // document.getElementById("SavingsId").value = saving.id;
             document.getElementById("SavingsName").value = saving.name;
             document.getElementById("SavingsDescription").value = saving.description;
             document.getElementById("SavingsAmount").value = saving.amount;

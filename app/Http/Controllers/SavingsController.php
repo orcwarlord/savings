@@ -84,11 +84,11 @@ class SavingsController extends Controller
 
 
 
-        // // Set `end_date` to null if `is_fixed` is false
-        // if (!$request->is_fixed) {
-        //     $validated['end_date'] = null;
-        //     // dd($validatedData['end_date']);
-        // }
+        // Set `end_date` to null if `is_fixed` is false
+        if (!$request->is_fixed) {
+            $validated['end_date'] = null;
+            // dd($validated['end_date']);
+        }
 
 
 
@@ -97,10 +97,11 @@ class SavingsController extends Controller
         try {
             // Attempt to create a new saving record
             Savings::create($validated);
-
+            // dd($validated);
             // Redirect with success message if creation succeeds
             return redirect()->route('savings.index')->with('success', 'Savings created successfully');
         } catch (\Exception $e) {
+            // dd($e);
             // Redirect back with error message if creation fails
             return redirect()->route('savings.index')->with('error', 'Failed to create savings. Please try again.');
         }
