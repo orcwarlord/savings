@@ -21,17 +21,21 @@
                 @if (Route::has('login'))
                     <nav class=" flex flex-1 justify-end">
                         @auth
-                            <a
-                                href="{{ url('/dashboard') }}"
-                                class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                            >
+
+                            <a href="{{ url('/dashboard') }}" class='inline-flex items-center px-4 py-2 mr-4  bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150'>
                                 Dashboard
                             </a>
-                            <a
-                                href="{{ route('logout') }}"
-                                class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                            >   Logout
+                            <a href="{{ url('/savings') }}" class='inline-flex items-center px-4 py-2 mr-4  bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150'>
+                                Savings
                             </a>
+                            <a href="{{ url('/organisation') }}" class='inline-flex items-center px-4 py-2 mr-4  bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150'>
+                                Organisations
+                            </a>
+                            <a href="{{ url('/type') }}" class='inline-flex items-center px-4 py-2 mr-4  bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150'>
+                                Types
+                            </a>
+
+
                             <!-- Authentication -->
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -71,19 +75,19 @@
                     <main class="h-full">
                         <div class="grid gap-6 grid-cols-1 ">
                             {{-- sum of all savings amount --}}
-                            <div class="p-6 bg-white rounded-lg shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] dark:bg-zinc-900 dark:ring-zinc-800">
+                            <div class="p-6 bg-white rounded-lg shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] dark:bg-zinc-900 dark:ring-zinc-800 ">
                                 <h2 class="text-xl font-semibold text-black dark:text-white">Total Savings</h2>
-                                <p>£{{ number_format($totalSavings, 2) }}</p>
+                                <p>£{{ number_format($totalSavings, 0) }}</p>
                             </div>
 
 
 
                             <div class="p-6 bg-white rounded-lg shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] dark:bg-zinc-900 dark:ring-zinc-800 ">
                                 {{-- Foreach user with savings display value in savingsByUser --}}
-                                <h2 class="text-xl font-semibold text-black dark:text-white">Savings by User</h2>
+                                <h2 class="text-xl font-semibold text-black dark:text-white">Savings by Saver</h2>
                                 <div class="grid grid-cols-1 md:grid-cols-2">
                                     @foreach ($savingsByUser as $user)
-                                        <p><span class="mr-3">{{ $user->saver }}:</span> £{{ number_format($user->total, 2) }}</p>
+                                        <p><span class="mr-5">{{ $user->saver }}:</span> £{{ number_format($user->total, 0) }}</p>
                                     @endforeach
                                 </div>
                             </div>
@@ -106,22 +110,47 @@
                                                 hover:bg-gray-100
                                                 dark:hover:bg-gray-800
                                                 @php
-                                                    $daysDifference = \Carbon\Carbon::parse($saving->end_date)->diffInDays(now(), false);
+                                                    if($saving->end_date != null)
+                                                        $daysDifference = \Carbon\Carbon::parse(now())->diffInDays($saving->end_date, false);
+                                                    else
+                                                    //     $daysDifference = 0;
                                                 @endphp
-                                                @if($daysDifference > 0 && $daysDifference < 30)
-                                                    bg-red-500 text-white hover:bg-red-600
-                                                @elseif($daysDifference > 0 && $daysDifference < 60)
-                                                    bg-amber-500 hover:bg-amber-600
-                                                @endif
-                                            ">
+
+                                                @if ($saving->end_date != null)
+                                                    @if($daysDifference > 30 && $daysDifference < 60)
+                                                        bg-green-300 text-black hover:bg-green-400
+                                                    @elseif($daysDifference  <= 0)
+                                                        bg-red-500 hover:bg-red-600 text-white
+                                                    @elseif($daysDifference <= 30 && $daysDifference > 0)
+                                                        bg-amber-300 text-black hover:bg-amber-400
+
+                                                    @endif
+                                                @endif"
+                                            />
                                                 <td class="px-4 py-2">{{ $saving->name }}</td>
-                                                <td class="px-4 py-2">£{{ number_format($saving->amount, 2) }}</td>
-                                                <td class="px-4 py-2">{{ \Carbon\Carbon::parse($saving->end_date)->format('d-M-Y') }}</td>
+                                                <td class="px-4 py-2 align-content-end">£{{ number_format($saving->amount, 0) }}</td>
+                                                <td class="px-4 py-2">
+                                                    {{-- if end_date =null then display ''--}}
+                                                    @if($saving->end_date != null)
+                                                        {{ \Carbon\Carbon::parse($saving->end_date)->format('d-M-Y') }}
+                                                    @endif
+                                                </td>
                                                 <td class="px-4 py-2">{{ $saving->organisation_name }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
+                                <div>
+                                    {{-- key to show date colours --}}
+                                    <div class="flex items-center mt-4 md:flex-row flex-col">
+                                        <div class="w-3 h-3 bg-green-300 rounded-full mr-2"></div>
+                                        <p>Ends within 60 days</p>
+                                        <div class="w-3 h-3 bg-amber-300 rounded-full ml-4 mr-2"></div>
+                                        <p>Ends within 30 days</p>
+                                        <div class="w-3 h-3 bg-red-500 rounded-full ml-4 mr-2"></div>
+                                        <p>Already ended</p>
+                                    </div>
+                                </div>
 
                             </div>
 
