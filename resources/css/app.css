@@ -3,3 +3,34 @@
 @tailwind utilities;
 
 @import "~@fortawesome/fontawesome-free/css/all.css";
+
+@layer base {
+    /* Hide the actual radio buttons */
+    input[name="filter"] {
+        display: none;
+    }
+
+    /* Style the label's span to look like a button */
+    .filter-label .filter-button {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-weight: bold;
+        text-align: center;
+        transition: background-color 0.2s, transform 0.2s;
+    }
+
+    /* Highlight the selected radio's label */
+    input[name="filter"]:checked + .filter-button {
+        background-color: #1c64f2; /* Active background */
+        color: white;
+        transform: scale(1.05); /* Slightly enlarge */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Add hover effect for unselected labels */
+    .filter-label .filter-button:hover {
+        background-color: #3b82f6;
+        transform: scale(1.02);
+    }
+}

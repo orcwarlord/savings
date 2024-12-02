@@ -30,6 +30,27 @@
                 </button>
 
                 <div class="grid grid-cols-1 "> {{-- Add if needed - lg:grid-cols-2 --}}
+                    <div class="flex justify-end p-4 space-x-4">
+                        <label class="filter-label cursor-pointer">
+                            <input type="radio" name="filter" value="all" class="hidden" checked>
+                            <span class="filter-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                All
+                            </span>
+                        </label>
+                        <label class="filter-label cursor-pointer">
+                            <input type="radio" name="filter" value="active" class="hidden">
+                            <span class="filter-button bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                Active
+                            </span>
+                        </label>
+                        <label class="filter-label cursor-pointer">
+                            <input type="radio" name="filter" value="inactive" class="hidden">
+                            <span class="filter-button bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                Inactive
+                            </span>
+                        </label>
+                    </div>
+
 
                     <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                         <table class="w-full text-left border-collapse">
@@ -40,7 +61,7 @@
                                     <th class="px-4 py-2 font-semibold text-black dark:text-white">End Date</th>
                                     <th class="px-4 py-2 font-semibold text-black dark:text-white">Organisation</th>
                                     <th class="px-4 py-2 font-semibold text-black dark:text-white">Saver</th>
-                                    {{-- <th class="px-4 py-2 font-semibold text-black dark:text-white">Active</th> --}}
+                                    <th class="px-4 py-2 font-semibold text-black dark:text-white">Active</th>
 
                                     {{-- <th class="px-4 py-2 font-semibold text-black dark:text-white">Is Fixed</th> --}}
                                     {{-- <th class="px-4 py-2 font-semibold text-black dark:text-white">Interest Rate</th>--}}
@@ -53,8 +74,8 @@
                             </thead>
                             <tbody>
                                 @foreach ($savings as $saving)
-                                    @if($saving->is_active == 1)
-                                        <tr class="border-b hover:bg-gray-100 dark:hover:bg-gray-800">
+                                    {{-- @if($saving->is_active == 1) --}}
+                                        <tr class="border-b hover:bg-gray-100 dark:hover:bg-gray-800 savings-row" data-status="{{ $saving->is_active ? 'active' : 'inactive' }}">
                                             <td class="px-4 py-2">{{ $saving->name }}</td>
                                             <td class="px-4 py-2">£{{ number_format($saving->amount, 2) }}</td>
 
@@ -62,6 +83,10 @@
                                             </td>
                                             <td class="px-4 py-2">{{ $saving->organisation_name }}</td>
                                             <td class="px-4 py-2">{{ $saving->saver }}</td>
+                                            <td class="px-4 py-2">{{ $saving->is_active ? 'Active' : 'Inactive' }}</td>
+                                            {{-- <td class="px-4 py-2">{{ $saving->is_fixed ? 'Yes' : 'No' }}</td> --}}
+                                            {{-- <td class="px-4 py-2">{{ $saving->interest_rate }}</td> --}}
+                                            {{-- <td class="px-4 py-2">{{ $saving->start_date }}</td> --}}
                                             <td class="px-4 py-2">{{ $saving->type_name }}</td>
                                             <td class="px-4 py-2">
                                                 {{-- <a href="{{ route('organisation.show', $organisation->id) }}" class="text-blue-600 hover:text-blue-900" target="_blank">View</a> --}}
@@ -89,14 +114,16 @@
 
                                             </td>
                                         </tr>
-                                    @endif
+                                    {{-- @endif --}}
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="flex justify-center p-6">
-                    <p> <a href="{{ route('dashboard') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Dashboard</a></p>
+                    <p> <a href="{{ route('dashboard') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-6 rounded">Dashboard</a></p>
+                    <p> <a href="{{ url('organisation') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Organisations</a></p>
+
                 </div>
             </div>
         </div>
@@ -484,7 +511,7 @@
             document.getElementById("SavingsEndDate").value = saving.end_date || '';
             document.getElementById("SavingsOrganisation").value = saving.organisation_id;
             document.getElementById("SavingsSaver").value = saving.saver;
-            document.getElementById("SavingsActive").value = saving.is_active;
+            document.getElementById("SavingsActive").checked = saving.is_active;
             document.getElementById("SavingsType").value = saving.type_id;
             document.getElementById("SavingsTransferredFrom").value = saving.transfer_id || '';
 
@@ -504,7 +531,7 @@
             document.getElementById('SavingsEndDate').value = '';
             document.getElementById('SavingsOrganisation').value = '';
             document.getElementById('SavingsSaver').value = '';
-            document.getElementById('SavingsActive').value = '';
+            document.getElementById('SavingsActive').checked = false;
             document.getElementById('SavingsType').value = '';
             document.getElementById('SavingsTransferredFrom').value = '';
         };
@@ -544,6 +571,33 @@
                 document.getElementById('SavingsEndDate').value = ''; // Reset the value
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterInputs = document.querySelectorAll('input[name="filter"]');
+            const savingsRows = document.querySelectorAll('.savings-row');
+
+            filterInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    const filter = input.value;
+                    console.log('Filter:', filter);
+                    savingsRows.forEach(row => {
+                        const status = row.getAttribute('data-status');
+                        console.log('Status:', status);
+
+                        if (filter === 'all') {
+                            row.style.display = ''; // Show all rows
+                        } else if (filter === 'active' && status === 'active') {
+                            row.style.display = ''; // Show only active rows
+                        } else if (filter === 'inactive' && status === 'inactive') {
+                            row.style.display = ''; // Show only inactive rows
+                        } else {
+                            row.style.display = 'none'; // Hide other rows
+                        }
+                    });
+                });
+            });
+        });
+
 
     </script>
 

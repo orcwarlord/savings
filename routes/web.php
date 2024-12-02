@@ -53,7 +53,7 @@ Route::get('/', function (SavingsService $savingsService) {
     $savingsByUser = $savingsService->getSavingsByUser();
 
     return view('welcome', compact('totalSavings', 'savingsWithOrganisation', 'savingsByUser'));
-});
+})->name('home');
 
 Route::get('/dashboard', function (SavingsService $savingsService) {
     $totalSavings = $savingsService->getTotalSavings();
