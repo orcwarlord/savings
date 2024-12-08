@@ -77,7 +77,7 @@
                             {{-- sum of all savings amount --}}
                             <div class="p-6 bg-white rounded-lg shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] dark:bg-zinc-900 dark:ring-zinc-800 ">
                                 <h2 class="text-xl font-semibold text-black dark:text-white">Total Savings</h2>
-                                <p>£{{ number_format($totalSavings, 0) }}</p>
+                                <p>£{{ number_format($totalActiveSavings, 0) }}</p>
                             </div>
 
 
@@ -106,6 +106,10 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($savingsWithOrganisation as $saving)
+
+                                        @if($saving->is_active == 1)
+
+
                                             <tr class="border-b
                                                 hover:bg-gray-100
                                                 dark:hover:bg-gray-800
@@ -137,6 +141,7 @@
                                                 </td>
                                                 <td class="px-4 py-2">{{ $saving->organisation_name }}</td>
                                             </tr>
+                                            @endif
                                         @endforeach
                                     </tbody>
                                 </table>

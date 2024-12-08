@@ -49,10 +49,12 @@ Route::get('/savings/{id}', function ($id) {
 
 Route::get('/', function (SavingsService $savingsService) {
     $totalSavings = $savingsService->getTotalSavings();
+    $totalActiveSavings = $savingsService->getActiveTotalSavings();
     $savingsWithOrganisation = $savingsService->getSavingsWithOrganisation();
     $savingsByUser = $savingsService->getSavingsByUser();
 
-    return view('welcome', compact('totalSavings', 'savingsWithOrganisation', 'savingsByUser'));
+
+    return view('welcome', compact('totalSavings', 'savingsWithOrganisation', 'savingsByUser' , 'totalActiveSavings'));
 })->name('home');
 
 Route::get('/dashboard', function (SavingsService $savingsService) {
@@ -66,6 +68,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/neumorphism', function () {
+    return view('neumorphism');
+})->name('neumorphism');
 
 // Add middleware('auth') to protect the route
 

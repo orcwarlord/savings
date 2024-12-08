@@ -12,6 +12,12 @@ class SavingsService
         return Savings::sum('amount');
     }
 
+    public function getActiveTotalSavings()
+    {
+        return Savings::where('is_active', true)->sum('amount');
+    }
+
+
     public function getSavingsWithOrganisation()
     {
         return Savings::select('savings.*', 'organisations.name as organisation_name')
@@ -23,6 +29,7 @@ class SavingsService
     {
         return Savings::select('saver', DB::raw('sum(amount) as total'))
             ->groupBy('saver')
+            ->where('is_active', true)
             ->get();
     }
 }

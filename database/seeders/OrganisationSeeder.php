@@ -29,5 +29,10 @@ class OrganisationSeeder extends Seeder
             'url' => 'https://www.skipton.co.uk',
         ]);
 
+        Organisation::create([
+            'name' => 'Leeds Buildng Society',
+            'url' => 'https://www.leedsbuildingsociety.co.uk',
+        ]);
+
     }
 }

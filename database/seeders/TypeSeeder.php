@@ -37,5 +37,15 @@ class TypeSeeder extends Seeder
         Type::create([
             'name' => 'Online Saver',
         ]);
+
+        // Add the sixth type
+        Type::create([
+            'name' => 'Regular Saver',
+        ]);
+
+        // Add the seventh type
+        Type::create([
+            'name' => 'Notice',
+        ]);
     }
 }

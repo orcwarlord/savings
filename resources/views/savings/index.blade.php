@@ -144,7 +144,8 @@
                 onclick="closeNewModal()">
                 &times;
             </button>
-            <h2 class="text-2xl font-semibold text-center">New Saving</h2>
+
+            <h2 class="text-2xl font-semibold text-center title">New Saving</h2>
             <form
                 action="{{ route('savings.store') }}"
                 method="POST"
@@ -435,6 +436,7 @@
 
         function openNewModal() {
 
+            document.querySelector('.title').innerText = 'New Saving';
             const modal = document.getElementById("newSavingModal");
             modal.classList.remove("hidden");
             modal.classList.add("flex");
@@ -471,6 +473,7 @@
 
         function openEditModal(saving) {
             // Set up modal for "Edit Saving"
+            document.querySelector('.title').innerText = 'Edit Saving';
             const modal = document.getElementById("newSavingModal");
             modal.classList.remove("hidden");
             modal.classList.add("flex");
